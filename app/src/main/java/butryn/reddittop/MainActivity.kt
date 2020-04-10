@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import interfaces.EndlessRecyclerOnScrollListener
+import listeners.EndlessRecyclerOnScrollListener
 import kotlinx.android.synthetic.main.activity_main.*
 import models.RedditData
 import models.RedditResponse

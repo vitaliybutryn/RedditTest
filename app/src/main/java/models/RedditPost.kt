@@ -7,15 +7,9 @@ class RedditPost {
     @SerializedName("subreddit")
     @Expose
     var subreddit: String? = null
-    @SerializedName("author_fullname")
-    @Expose
-    var authorFullname: String? = null
     @SerializedName("title")
     @Expose
     var title: String? = null
-    @SerializedName("subreddit_name_prefixed")
-    @Expose
-    var subredditNamePrefixed: String? = null
     @SerializedName("ups")
     @Expose
     var ups: Int? = null
@@ -28,11 +22,6 @@ class RedditPost {
     @SerializedName("permalink")
     @Expose
     var permalink: String? = null
-    @Expose
-    var media: Media? = null
-    @SerializedName("is_video")
-    @Expose
-    var isVideo: Boolean? = null
     @SerializedName("thumbnail")
     @Expose
     var thumbnail: String? = null
