@@ -122,6 +122,7 @@ class MainActivity : AppCompatActivity() {
     private fun clearPaginationLoadedPosts() {
         mScrollListener?.isLastPage = false
         recyclerAdapter.clearData()
+        paginationAfter = null
     }
 
     private fun scrollListener(isEnable: Boolean) {

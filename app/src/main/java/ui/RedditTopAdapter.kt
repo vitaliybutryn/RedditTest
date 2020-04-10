@@ -36,7 +36,9 @@ class RedditTopAdapter(private var context: Context) :
     override fun getItemCount() = redditTop.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val top = redditTop[position]?.redditPost
+        viewHolder = holder
+        setVisibility(holder.updateProgress , false, true)
+        val top = redditTop[position].redditPost
         val pastTime = top?.created!!.toLong() * 1000
 
         val timeAgo = DateUtils.getRelativeTimeSpanString(
@@ -77,6 +79,7 @@ class RedditTopAdapter(private var context: Context) :
 
     fun clearData() {
         this.redditTop.clear()
+        notifyDataSetChanged()
     }
 
     fun showPaginationProgress(isVisible: Boolean) {
