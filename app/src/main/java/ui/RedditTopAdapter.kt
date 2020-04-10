@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.VideoView
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
@@ -82,7 +81,8 @@ class RedditTopAdapter(private var context: Context) :
 
     fun showPaginationProgress(isVisible: Boolean) {
         viewHolder?.apply {
-            setVisibility(updateProgress!!, isVisible, true) }
+            setVisibility(updateProgress!!, isVisible, true)
+        }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

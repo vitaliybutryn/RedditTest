@@ -16,12 +16,12 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import service.ApiService
+import service.ApiService.Companion.REDDIT_POST_LIMIT
 import ui.RedditTopAdapter
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        const val REDDIT_POSTS_LIMIT = 25
         const val BASE_URL = "https://www.reddit.com"
     }
 
@@ -58,19 +58,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadData() {
+        scrollListener(false)
         progressBar.visibility = View.VISIBLE
         val api = retrofit?.create(ApiService::class.java)
-        api?.getRedditTop(REDDIT_POSTS_LIMIT)!!.enqueue(object : Callback<RedditResponse> {
+        api?.getRedditTop()!!.enqueue(object : Callback<RedditResponse> {
             override fun onResponse(call: Call<RedditResponse>, response: Response<RedditResponse>) {
                 scrollListener(true)
                 paginationAfter = response.body()?.data?.after
-                if (response.body()?.data!!.redditData!!.size < REDDIT_POSTS_LIMIT) {
+                if (response.body()?.data!!.redditData!!.size < REDDIT_POST_LIMIT) {
                     endOfList()
                 }
                 showData(response.body()?.data?.redditData)
             }
 
             override fun onFailure(call: Call<RedditResponse>, t: Throwable) {
+                scrollListener(true)
                 Toast.makeText(applicationContext, t.message, Toast.LENGTH_SHORT).show()
             }
         })
@@ -110,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                 loadMore()
             }
         }
-        mScrollListener!!.paginationLimit = REDDIT_POSTS_LIMIT
+        mScrollListener!!.paginationLimit = REDDIT_POST_LIMIT
     }
 
     private fun endOfList() {
@@ -127,18 +129,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadMore() {
+        scrollListener(false)
         val api = retrofit?.create(ApiService::class.java)
         api?.getRedditTopPagination(after = paginationAfter!!)?.enqueue(object : Callback<RedditResponse> {
             override fun onResponse(call: Call<RedditResponse>, response: Response<RedditResponse>) {
+                scrollListener(true)
                 paginationAfter = response.body()?.data?.after
-                if (response.body()?.data!!.redditData!!.size < REDDIT_POSTS_LIMIT) {
+                if (response.body()?.data!!.dist!! < REDDIT_POST_LIMIT && response.body()?.data!!.after == null) {
                     endOfList()
                 }
-                scrollListener(false)
                 showData(response.body()?.data?.redditData)
             }
 
             override fun onFailure(call: Call<RedditResponse>, t: Throwable) {
+                scrollListener(true)
                 Toast.makeText(applicationContext, t.message, Toast.LENGTH_SHORT).show()
             }
         })

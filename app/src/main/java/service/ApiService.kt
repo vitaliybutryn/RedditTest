@@ -9,7 +9,7 @@ import retrofit2.http.Query
 interface ApiService {
 
     companion object {
-        const val REDDIT_POST_LIMIT = 25
+        const val REDDIT_POST_LIMIT = 10
     }
 
     @GET("/top/.json")
