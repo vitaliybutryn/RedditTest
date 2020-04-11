@@ -2,6 +2,7 @@ package butryn.reddittop
 
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -53,13 +54,13 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             title = "Reddit Top"
-            setIcon(resources.getDrawable(R.drawable.actionbar_space_between_icon_and_title))
+            setIcon(resources.getDrawable(R.drawable.actionbar_icon))
         }
     }
 
     private fun loadData() {
         scrollListener(false)
-        progressBar.visibility = View.VISIBLE
+        parentShimmerLayout.startShimmer()
         val api = retrofit?.create(ApiService::class.java)
         api?.getRedditTop()!!.enqueue(object : Callback<RedditResponse> {
             override fun onResponse(call: Call<RedditResponse>, response: Response<RedditResponse>) {
@@ -90,13 +91,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showData(body: List<RedditData>?) {
-        progressBar.visibility = View.GONE
+        parentShimmerLayout.stopShimmer()
+        parentShimmerLayout.visibility = View.GONE
         recyclerAdapter.setData(body!!)
     }
 
     private fun initRefresh() {
         swipe_refresh.setOnRefreshListener {
             clearPaginationLoadedPosts()
+            parentShimmerLayout.visibility = View.VISIBLE
+            parentShimmerLayout.showShimmer(true)
             loadData()
             swipe_refresh.isRefreshing = false
         }
@@ -147,5 +151,18 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, t.message, Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private var doubleBackToExitPressedOnce = false
+    override fun onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed()
+            return
+        }
+
+        this.doubleBackToExitPressedOnce = true
+        Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show()
+
+        Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
     }
 }

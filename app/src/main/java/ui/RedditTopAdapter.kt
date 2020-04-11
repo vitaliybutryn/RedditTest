@@ -14,6 +14,7 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import butryn.reddittop.MainActivity.Companion.BASE_URL
 import butryn.reddittop.R
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.reddit_post_item.view.*
@@ -61,13 +62,14 @@ class RedditTopAdapter(private var context: Context) :
         holder.item.setOnClickListener {
             val builder = CustomTabsIntent.Builder()
             builder.setToolbarColor(ContextCompat.getColor(context, R.color.mainAppColor))
-            builder.setShowTitle(true)
+            builder.setStartAnimations(context, R.anim.slide_in_right, R.anim.slide_out_left)
             builder.addDefaultShareMenuItem()
+            builder.setShowTitle(true)
             val customTabsIntent = builder.build()
             customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             customTabsIntent.launchUrl(
                 context,
-                Uri.parse(POST_URL + top.permalink)
+                Uri.parse(BASE_URL + top.permalink)
             )
         }
     }
@@ -97,9 +99,5 @@ class RedditTopAdapter(private var context: Context) :
         val rating: TextView = itemView.tv_rating
         val comments: TextView = itemView.tv_comments
         var updateProgress: ProgressBar? = itemView.update_progress
-    }
-
-    companion object {
-        const val POST_URL = "https://www.reddit.com/"
     }
 }
